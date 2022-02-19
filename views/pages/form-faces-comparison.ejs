@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <%- include('../partials/header'); %>
+
+
+<div class="container-fluid">
+  <div class="row">
+
+    <%- include('../partials/menu'); %>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Image - Faces Comparison</h1>
+      </div>
+
+      <div class="bd-example">
+      
+      <% if (msg !== undefined && msg !== null && msg !== '') { %>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong> <%= msg %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+      
+      <form class="row g-3" action="/facesComparison" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="file" class="form-label">File</label>
+          <input class="form-control" type="file" id="file" name="file" multiple/>
+        </div>
+        <div class="mb-3">
+          <button class="btn btn-primary btn-sm" type="submit"> Enviar Arquivos</button>
+        </div>
+      </form>
+      <div>
+      <p></p><p></p>
+      <% if (dataFacesComparison !== undefined && dataFacesComparison.length > 0) { %>
+      <h2>Resultado da Análise - FaceMatches</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Similarity</th>
+              <th scope="col">Confidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% dataFacesComparison.forEach(function(data) { %>
+              <tr>
+                <td><%= data.Similarity %></td>
+                <td><%= data.Face.Confidence %></td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+        <% } %>
+      </div>
+    </div>
+    </main>
+  </div>
+</div>
+  </body>
+</html>

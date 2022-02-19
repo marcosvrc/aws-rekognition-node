@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <%- include('../partials/header'); %>
+
+
+<div class="container-fluid">
+  <div class="row">
+
+    <%- include('../partials/menu'); %>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Image - Facial Analysis S3</h1>
+      </div>
+
+      <div class="bd-example">
+      <form class="row g-3" action="/facialAnalysisS3" method="POST">
+        <div class="mb-3">
+          <label for="collectionId" class="col-sm-2 col-form-label">Name File S3</label>
+          <input class="form-control" name="pathPhoto" type="text" aria-label="readonly input example">
+        </div>
+        <div class="mb-3">
+          <button class="btn btn-primary btn-sm" type="submit">Enviar</button>
+        </div>
+      </form>
+      <div>
+        <p></p><p></p>
+        <% if (dataFacialAnalysis !== undefined && dataFacialAnalysis.length > 0) { %>
+        <h2>Resultado da Análise</h2>
+        <div class="table-responsive">
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Face</th>
+                <th scope="col">Attribute</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(var i=0; i < dataFacialAnalysis.length; i++) { %>
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>Age Range</td>
+                  <td><%= dataFacialAnalysis[i].AgeRange.Low + ' - ' + 
+                          dataFacialAnalysis[i].AgeRange.High%></td>
+                </tr>
+                  
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>Smile (Value - Confidence)</td>
+                  <td><%= dataFacialAnalysis[i].Smile.Value + ' - ' +
+                          dataFacialAnalysis[i].Smile.Confidence%></td>
+                </tr>
+  
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>Eyeglasses (Value - Confidence)</td>
+                  <td><%= dataFacialAnalysis[i].Eyeglasses.Value + ' - ' +
+                          dataFacialAnalysis[i].Eyeglasses.Confidence%></td>
+                </tr>
+  
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>Sunglasses (Value - Confidence)</td>
+                  <td><%= dataFacialAnalysis[i].Sunglasses.Value + ' - ' +
+                          dataFacialAnalysis[i].Sunglasses.Confidence%></td>
+                </tr>
+  
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>Gender (Value - Confidence)</td>
+                  <td><%= dataFacialAnalysis[i].Gender.Value + ' - ' +
+                          dataFacialAnalysis[i].Gender.Confidence%></td>
+                </tr>
+  
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>Beard (Value - Confidence)</td>
+                  <td><%= dataFacialAnalysis[i].Beard.Value + ' - ' +
+                          dataFacialAnalysis[i].Beard.Confidence%></td>
+                </tr>
+  
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>Mustache (Value - Confidence)</td>
+                  <td><%= dataFacialAnalysis[i].Mustache.Value + ' - ' +
+                          dataFacialAnalysis[i].Mustache.Confidence%></td>
+                </tr>
+  
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>EyesOpen (Value - Confidence)</td>
+                  <td><%= dataFacialAnalysis[i].EyesOpen.Value + ' - ' +
+                          dataFacialAnalysis[i].EyesOpen.Confidence%></td>
+                </tr>
+  
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>MouthOpen (Value - Confidence)</td>
+                  <td><%= dataFacialAnalysis[i].MouthOpen.Value + ' - ' +
+                          dataFacialAnalysis[i].MouthOpen.Confidence%></td>
+                </tr>
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td>Emotions  - Confidence)</td>
+                  <td>
+                    <% for(var x=0; x < dataFacialAnalysis[i].Emotions.length; x++) { %>
+                      <%= dataFacialAnalysis[i].Emotions[x].Type + ' - ' +
+                          dataFacialAnalysis[i].Emotions[x].Confidence%>
+                      <br>
+  
+                    <% } %>
+                  </td>
+                </tr>
+                
+                <% } %>
+            </tbody>
+          </table>
+          <% } %>
+      </div>
+    </main>
+  </div>
+</div>
+  </body>
+</html>

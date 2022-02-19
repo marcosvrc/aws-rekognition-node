@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <%- include('../partials/header'); %>
+
+
+<div class="container-fluid">
+  <div class="row">
+
+    <%- include('../partials/menu'); %>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">AWS - Create Collection</h1>
+      </div>
+
+      <div class="bd-example">
+      <form class="row g-3" action="/createCollection" method="POST">
+        <div class="mb-3">
+          <label for="collectionId" class="col-sm-2 col-form-label">Collection Id</label>
+          <input class="form-control" name="collectionId" type="text" value="famous" aria-label="readonly input example" readonly>
+        </div>
+        <div class="mb-3">
+          <button class="btn btn-primary btn-sm" type="submit"> Create</button>
+        </div>
+      </form>
+      </div>
+    </main>
+  </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <%- include('../partials/header'); %>
+
+
+<div class="container-fluid">
+  <div class="row">
+
+    <%- include('../partials/menu'); %>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Image - Index File Collection</h1>
+      </div>
+
+      <div class="bd-example">
+        <% if (msg !== undefined && msg !== null && msg !== '') { %>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong> <%= msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% } %>
+
+      <form class="row g-3" action="/indexFileCollection" method="POST" enctype="multipart/form-data">
+        
+        <div class="mb-3">
+          <label for="collectionId" class="form-label">Collection Id</label>
+          <input class="form-control" name="collectionId" type="text" value="famous" aria-label="readonly input example" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="file" class="form-label">File</label>
+          <input class="form-control" type="file" id="file" name="file"/>
+        </div>
+        <div class="mb-3">
+          <button class="btn btn-primary btn-sm" type="submit"> Enviar Arquivo</button>
+        </div>
+      </form>
+      <div> 
+      </div>
+    </div>
+    </main>
+  </div>
+</div>
+  </body>
+</html>
