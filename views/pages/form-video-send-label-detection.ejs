@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <%- include('../partials/header'); %>
+
+
+<div class="container-fluid">
+  <div class="row">
+
+    <%- include('../partials/menu'); %>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Video - Send Video Label Detection</h1>
+      </div>
+
+      <div class="bd-example">
+        <div class="bd-example">
+          <% if (msg !== undefined && msg !== null && msg !== '') { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong> <%= msg %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% } %>
+
+      <form class="row g-3" action="/startLabelDetection" method="POST">
+        <div class="mb-3">
+          <label for="videoLabel" class="col-sm-2 col-form-label">Name File S3</label>
+          <input class="form-control" name="videoLabel" type="text" aria-label="readonly input example">
+        </div>
+        <div class="mb-3">
+          <button class="btn btn-primary btn-sm" type="submit">Enviar</button>
+        </div>
+      </form>
+      </div>
+    </main>
+  </div>
+</div>
+  </body>
+</html>

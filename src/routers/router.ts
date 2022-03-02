@@ -6,7 +6,11 @@ const router = express.Router()
 const upload = multer();
 const uploadFiles = multer().array('file',2);
 
+/**Config AWS */
 const REGION_AWS = 'us-east-1';
+const ROLE_REKOGNITION_ARN = 'arn:aws:iam::482505930630:role/RoleRekognition';
+const SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:482505930630:videos-rekognition';
+const BUCKET_NAME_VIDEOS = 'curso-rekognition-video';
 
 /**FORMS */
 const FORM_INDEX = "pages/index";
@@ -21,6 +25,7 @@ const FORM_CREATE_COLLECTION = "pages/form-create-collection";
 const FORM_INDEX_FILE_COLLECTION = "pages/form-index-file-collection";
 const FORM_FIND_IMAGE_COLLECTION = "pages/form-find-image-collection";
 const FORM_FACIAL_ANALYSIS_S3 = "pages/form-facial-analysis-s3";
+const FORM_VIDEO_SEND_LABEL_DETECTION = "pages/form-video-send-label-detection";
 
 
 /**PATHS VIEW */
@@ -35,6 +40,7 @@ const PATH_VIEW_CREATE_COLLECTION = '/viewCreateCollection';
 const PATH_VIEW_INDEX_FILE_COLLECTION = '/viewIndexFileCollection';
 const PATH_VIEW_FIND_IMAGE_COLLECTION = '/viewFindImageCollection';
 const PATH_VIEW_FACIAL_ANALYSIS_S3 = '/viewFacialAnalysisS3';
+const PATH_VIEW_VIDEO_SEND_LABEL_DETECTION = '/viewSendVideoLabelDetection';
 
 router.get('/', (request,response) => {
   response.render(FORM_INDEX);
@@ -104,6 +110,12 @@ router.get(PATH_VIEW_FACIAL_ANALYSIS_S3, (request,response) => {
     dataFacialAnalysis: []
   });
 });
+
+router.get(PATH_VIEW_VIDEO_SEND_LABEL_DETECTION,  (request, response) =>{
+  response.render(FORM_VIDEO_SEND_LABEL_DETECTION, {
+    msg: null
+  })
+})
 /**
  * Executa a função para verificar labels de acordo com uma foto
  */
@@ -462,6 +474,41 @@ router.post('/facialAnalysisS3', function(request, response){
       }
     }
   })
+})
+
+router.post('/startLabelDetection', function(request,response){
+  
+  aws.config.update({region:REGION_AWS})
+  var rekognition = new aws.Rekognition();
+  var nome_video = request.body.videoLabel;
+
+  var params = {
+      ClientRequestToken: Date.now().toString(),
+      JobTag: 'video_label',
+      MinConfidence: 80,
+      NotificationChannel: { 
+        RoleArn: ROLE_REKOGNITION_ARN,
+        SNSTopicArn: SNS_TOPIC_ARN
+      },
+      Video: { 
+        S3Object: { 
+          Bucket: BUCKET_NAME_VIDEOS,
+          Name: nome_video
+         }
+      }
+   }
+
+  rekognition.startLabelDetection(params, function(err, data){
+    if(err){
+      console.log(err, err.stack);
+    } else {
+      console.log(data);
+      response.render(FORM_VIDEO_SEND_LABEL_DETECTION, {
+        msg: "JobId: " + data.JobId
+      });
+    }
+  })
+
 })
 
 export default router
