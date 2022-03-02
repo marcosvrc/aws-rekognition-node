@@ -1,10 +1,14 @@
 import express from 'express'
 import aws from "aws-sdk";
 import multer from "multer";
+import moment from "moment"
+import momentDurationFormat from "moment-duration-format";
+
 
 const router = express.Router()
 const upload = multer();
 const uploadFiles = multer().array('file',2);
+
 
 /**Config AWS */
 const REGION_AWS = 'us-east-1';
@@ -26,6 +30,7 @@ const FORM_INDEX_FILE_COLLECTION = "pages/form-index-file-collection";
 const FORM_FIND_IMAGE_COLLECTION = "pages/form-find-image-collection";
 const FORM_FACIAL_ANALYSIS_S3 = "pages/form-facial-analysis-s3";
 const FORM_VIDEO_SEND_LABEL_DETECTION = "pages/form-video-send-label-detection";
+const FORM_VIDEO_GET_LABEL_DETECTION_S3 = "pages/form-video-label-detection-s3";
 
 
 /**PATHS VIEW */
@@ -41,6 +46,7 @@ const PATH_VIEW_INDEX_FILE_COLLECTION = '/viewIndexFileCollection';
 const PATH_VIEW_FIND_IMAGE_COLLECTION = '/viewFindImageCollection';
 const PATH_VIEW_FACIAL_ANALYSIS_S3 = '/viewFacialAnalysisS3';
 const PATH_VIEW_VIDEO_SEND_LABEL_DETECTION = '/viewSendVideoLabelDetection';
+const PATH_VIEW_VIDEO_GET_LABEL_DETECTION_S3 = '/viewVideoGetLabelDetectionS3';
 
 router.get('/', (request,response) => {
   response.render(FORM_INDEX);
@@ -116,6 +122,13 @@ router.get(PATH_VIEW_VIDEO_SEND_LABEL_DETECTION,  (request, response) =>{
     msg: null
   })
 })
+
+router.get(PATH_VIEW_VIDEO_GET_LABEL_DETECTION_S3, (request,response) => {
+  response.render(FORM_VIDEO_GET_LABEL_DETECTION_S3, {
+    dataDetectedLabels: []
+  });
+});
+
 /**
  * Executa a função para verificar labels de acordo com uma foto
  */
@@ -498,6 +511,7 @@ router.post('/startLabelDetection', function(request,response){
       }
    }
 
+  //rekognition.startCelebrityRecognition --Usado para analisar videos com celebridades
   rekognition.startLabelDetection(params, function(err, data){
     if(err){
       console.log(err, err.stack);
@@ -508,7 +522,35 @@ router.post('/startLabelDetection', function(request,response){
       });
     }
   })
+})
 
+router.post('/getLabelDetectionS3', function(request, response){
+  
+  var job_id = request.body.jobId;
+  aws.config.update({region:REGION_AWS})
+  var rekognition = new aws.Rekognition();
+
+  var params = {
+    JobId: job_id,
+    MaxResults: 1000,
+    SortBy: 'TIMESTAMP'
+   };
+
+  //rekognition.getCelebrityRecognition -- usado para obter dados de celebridades
+  rekognition.getLabelDetection(params, function(err, data){
+    if(err){
+      console.log(err, err.stack);
+    } else {
+      console.log(data);    
+      if(data.Labels !== undefined){
+        response.render(FORM_VIDEO_GET_LABEL_DETECTION_S3, {
+          dataDetectedLabels: data.Labels,
+          moment: moment,
+          momentDurationFormat: momentDurationFormat
+        });
+      }
+    }
+  })
 })
 
 export default router

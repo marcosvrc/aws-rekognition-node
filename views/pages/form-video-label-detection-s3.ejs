@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <%- include('../partials/header'); %>
+
+
+<div class="container-fluid">
+  <div class="row">
+
+    <%- include('../partials/menu'); %>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Video - Get Label Detection S3</h1>
+      </div>
+
+      <div class="bd-example">
+      <form class="row g-3" action="/getLabelDetectionS3" method="POST">
+        <div class="mb-3">
+          <label for="jobId" class="form-label">Job Id</label>
+          <input class="form-control" name="jobId" type="text" aria-label="readonly input example">
+        </div>
+        <div class="mb-3">
+          <button class="btn btn-primary btn-sm" type="submit"> Obter Dados</button>
+        </div>
+      </form>
+      <div>
+      <p></p><p></p>
+      <% if (dataDetectedLabels !== undefined && dataDetectedLabels.length > 0) { %>
+      <h2>Resultado da Análise</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Confidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% dataDetectedLabels.forEach(function(data) { %>
+              <tr>
+                <td><%= data.Label.Name %></td>
+                <td><%= parseFloat(data.Label.Confidence).toFixed(2) %></td>
+                <!--<td><%= moment.duration(data.Label.Timestamp, 'milliseconds').format("mm:ss:SS", { trim: false}) %></td>-->
+                <td><%= moment(data.Label.Timestamp).format('mm:ss:SS') %></td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+        <% } %>
+      </div>
+    </div>
+    </main>
+  </div>
+</div>
+  </body>
+</html>
